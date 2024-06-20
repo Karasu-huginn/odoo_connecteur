@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.ellipro</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Connecteur">
+                    <group>
+                        <field name="ellipro_contract"/>
+                        <field name="ellipro_user"/>
+                        <field name="ellipro_password"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
