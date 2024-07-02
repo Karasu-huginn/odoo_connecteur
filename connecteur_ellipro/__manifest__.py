@@ -5,8 +5,9 @@
     "version": "14.0.1.0.0",
     "summary": "",
     "description": "",
-    "depends": [],
+    "depends": ["base", "multi_step_wizard"],
     "data": [
+        "security/ir.model.access.csv",
         "views/res_company_views.xml",
         "views/res_partner_views.xml",
         "views/ellipro_res_partner_create.xml",

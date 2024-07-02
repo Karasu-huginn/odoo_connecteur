@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ellipro,ellipro.res.partner.create,model_ellipro_res_partner_create,base.group_user,1,1,1,1
+access_ellipro2,ellipro.partners.results,model_ellipro_partners_results,base.group_user,1,1,1,1

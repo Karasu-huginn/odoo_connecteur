@@ -9,3 +9,4 @@ class ResCompany(models.Model):
     ellipro_contract = fields.Char()
     ellipro_user = fields.Char()
     ellipro_password = fields.Char()
+    ellipro_max_hits = fields.Char()

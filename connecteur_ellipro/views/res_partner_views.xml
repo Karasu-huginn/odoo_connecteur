@@ -8,18 +8,11 @@
             <notebook position="inside">
                 <page string="Ellipro">
                     <group>
-                        <field name="ellipro_search_type" />
-                        <field name="ellipro_search_text" />
-                        <field name="ellipro_max_hits" />
-                        <field name="ellipro_type_attribute" />
                         <field name="ellipro_search_result_siret" />
-                        <field name="ellipro_search_result_name" />
+                        <field name="ellipro_search_result_siren" />
                         <field name="ellipro_order_company" />
                         <field name="ellipro_order_product" />
                         <field name="ellipro_order_result" />
-                        <button
-                            name="search_button" type="object"
-                            string="Click to search" />
                         <button
                             name="order_button" type="object"
                             string="Click to order" />

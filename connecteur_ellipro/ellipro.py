@@ -192,17 +192,42 @@ if __name__ == "__main__":
         search_request = Search(
             SearchType.NAME,
             search_text,
-            "5",
-            IdType.SRC,
+            "1",
+            IdType.ESTB,
         )
         response = search(admin, search_request)
-        print("response.text")
-        print(response)
-        print("response.text")
         # * print search
-    # $        for element in response.iter("establishment"):
-    # $            print(element.findall("name")[0].text)
-    # $            print(element.findall("id")[2].text)
+        businessName = ""
+        tradeName = ""
+        siren = ""
+        siret = ""
+        phoneNumber = ""
+        for establishment in response.iter("establishment"):
+            names = establishment.findall("name")
+            for name in names:
+                if name.attrib["type"] == "businessname":
+                    businessName = name.text
+                elif name.attrib["type"] == "tradename":
+                    tradeName = name.text
+            ids = establishment.findall("id")
+            for id in ids:
+                if id.attrib["idName"] == "SIREN":
+                    siren = id.text
+                elif id.attrib["idName"] == "SIRET":
+                    siret = id.text
+            communications = establishment.findall("communication")
+            for number in communications:
+                if number.attrib["type"] == "phone":
+                    phoneNumber = number.text
+            print("business name = ", businessName, "\ntrade name = ", tradeName)
+            print("SIREN = ", siren, "\nSIRET = ", siret)
+            for address in response.iter("address"):
+                ellipro_city = address.findall("cityName")[0].text
+                ellipro_zipcode = address.findall("cityCode")[0].text
+                ellipro_street_address = address.findall("addressLine")[0].text
+            print("address :")
+            print(ellipro_street_address, ellipro_city, ellipro_zipcode)
+            print(phoneNumber)
     elif request_type == RequestType.ONLINEORDER:
         company_id = input("Id interne : ")
         product_id = input("Id produit : ")
