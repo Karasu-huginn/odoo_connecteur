@@ -192,7 +192,7 @@ if __name__ == "__main__":
         search_request = Search(
             SearchType.NAME,
             search_text,
-            "1",
+            "20",
             IdType.ESTB,
         )
         response = search(admin, search_request)
@@ -202,32 +202,53 @@ if __name__ == "__main__":
         siren = ""
         siret = ""
         phoneNumber = ""
+        suggestions = []
+        ET.dump(response)
         for establishment in response.iter("establishment"):
-            names = establishment.findall("name")
-            for name in names:
-                if name.attrib["type"] == "businessname":
-                    businessName = name.text
-                elif name.attrib["type"] == "tradename":
-                    tradeName = name.text
-            ids = establishment.findall("id")
-            for id in ids:
-                if id.attrib["idName"] == "SIREN":
-                    siren = id.text
-                elif id.attrib["idName"] == "SIRET":
-                    siret = id.text
-            communications = establishment.findall("communication")
-            for number in communications:
-                if number.attrib["type"] == "phone":
-                    phoneNumber = number.text
-            print("business name = ", businessName, "\ntrade name = ", tradeName)
-            print("SIREN = ", siren, "\nSIRET = ", siret)
-            for address in response.iter("address"):
-                ellipro_city = address.findall("cityName")[0].text
-                ellipro_zipcode = address.findall("cityCode")[0].text
-                ellipro_street_address = address.findall("addressLine")[0].text
-            print("address :")
-            print(ellipro_street_address, ellipro_city, ellipro_zipcode)
-            print(phoneNumber)
+            suggestion = {}
+            suggestion["name"] = establishment.findall("name")[0].text
+            suggestion["coreff_company_code"] = establishment.findall(
+                "id[@idName='SIREN']"
+            )[0].text
+            suggestion["ellipro_siret"] = establishment.findall("id[@idName='SIRET']")[
+                0
+            ].text
+            suggestion["ellipro_identifiant_interne"] = establishment.findall(
+                "id[@idName='Identifiant interne']"
+            )[0].text
+            if establishment.findall("communication[@type='phone']") != []:
+                suggestion["phone"] = establishment.findall(
+                    "communication[@type='phone']"
+                )[0].text
+            suggestion["city"] = establishment.findall("address/cityName")[0].text
+            suggestion["zip"] = establishment.findall("address/cityCode")[0].text
+            suggestion["street"] = establishment.findall("address/addressLine")[0].text
+            suggestion["ellipro_siren"] = establishment.findall("id[@idName='SIREN']")[
+                0
+            ].text
+            if establishment.findall("name[@type='businessname']") != []:
+                suggestion["ellipro_business_name"] = establishment.findall(
+                    "name[@type='businessname']"
+                )[0].text
+            if establishment.findall("name[@type='tradename']") != []:
+                suggestion["ellipro_trade_name"] = establishment.findall(
+                    "name[@type='tradename']"
+                )[0].text
+            suggestion["ellipro_city"] = establishment.findall("address/cityName")[
+                0
+            ].text
+            suggestion["ellipro_zipcode"] = establishment.findall("address/cityCode")[
+                0
+            ].text
+            suggestion["ellipro_street_address"] = establishment.findall(
+                "address/addressLine"
+            )[0].text
+            if establishment.findall("communication[@type='phone']") != []:
+                suggestion["ellipro_phone_number"] = establishment.findall(
+                    "communication[@type='phone']"
+                )[0].text
+            suggestions.append(suggestion)
+            print(suggestion)
     elif request_type == RequestType.ONLINEORDER:
         company_id = input("Id interne : ")
         product_id = input("Id produit : ")
@@ -243,8 +264,6 @@ if __name__ == "__main__":
                 element.findall("product")[0].text,
                 element.findall("product")[0].attrib["range"],
             )
-
-    ET.dump(response)
 
 
 """

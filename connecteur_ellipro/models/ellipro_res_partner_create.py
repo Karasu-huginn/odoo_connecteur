@@ -29,8 +29,6 @@ class ResPartner(models.TransientModel):
 
     ellipro_results_list = fields.Many2one("ellipro.partners.results")
 
-    ellipro_predict = fields.Char()
-
     ellipro_search_result_siret = fields.Char()
     ellipro_search_result_siren = fields.Char()
     ellipro_name = fields.Char()
@@ -104,7 +102,7 @@ class ResPartner(models.TransientModel):
             search_type,
             self.ellipro_search_text,
             self.env.user.company_id.ellipro_max_hits,
-            type_attribute,  # todo
+            type_attribute,
         )
 
         headers = {"Content-Type": "application/xml"}
@@ -164,8 +162,3 @@ class ResPartner(models.TransientModel):
 
     def cancel_partner_action(self):
         pass
-
-
-# //        logger.info(
-# //            "\n-------------------------------\nstate_exit_configure\n-------------------------------"
-# //        )
