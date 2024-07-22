@@ -18,9 +18,15 @@
                     attrs="{'invisible': [('is_company', '=', False)]}">
                     <group>
                         <field name="pappers_identifiant_interne" force_save="1" readonly="1" />
+                        <field name="pappers_note" />
+                        <field name="pappers_json" />
+                        <button string="Get company's note"
+                            name="get_note"
+                            type="object" />
                         <button string="Retrieve Directors"
                             name="retrieve_directors"
                             type="object" />
+                        <button string="Get Report" name="get_report" type="object" />
                     </group>
                 </page>
             </xpath>

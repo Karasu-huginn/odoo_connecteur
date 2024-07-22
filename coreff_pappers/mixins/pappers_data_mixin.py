@@ -14,6 +14,8 @@ class PappersDataMixin(models.AbstractModel):
     pappers_visibility = fields.Boolean(compute="_compute_pappers_visibility")
 
     pappers_identifiant_interne = fields.Char()
+    pappers_note = fields.Char()
+    pappers_json = fields.Char()
 
     def _compute_pappers_visibility(self):
         company = self.env.user.company_id
@@ -45,3 +47,32 @@ class PappersDataMixin(models.AbstractModel):
                         "type": "other",
                     }
                 )
+
+    def get_note(self):
+        pass
+
+    def get_report(self):
+        for rec in self:
+            if len(rec.coreff_company_code) == 14:
+                code_type = "siret"
+            elif 9 <= len(rec.coreff_company_code) < 14:
+                code_type = "siren"
+            else:
+                raise UserError("Numéro de SIREN / SIRET invalide.")
+            b64_pdf = PA.search_report(
+                self.env.user.company_id.pappers_api_token,
+                rec.coreff_company_code,
+                code_type,
+            )
+            name = rec.name + " Report.pdf"
+            return self.env["ir.attachment"].create(
+                {
+                    "name": name,
+                    "type": "binary",
+                    "datas": b64_pdf,
+                    "store_fname": name,
+                    "res_model": self._name,
+                    "res_id": self.id,
+                    "mimetype": "application/x-pdf",
+                }
+            )
