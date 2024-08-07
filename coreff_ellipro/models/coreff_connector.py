@@ -27,9 +27,7 @@ class CoreffConnector(models.Model):
         """
 
         search_type = (
-            EP.SearchType.ID
-            if arguments["valueIsCompanyCode"]
-            else EP.SearchType.NAME
+            EP.SearchType.ID if arguments["valueIsCompanyCode"] else EP.SearchType.NAME
         )
         request_type = EP.RequestType.SEARCH.value
         type_attribute = EP.IdType.SRC
@@ -59,14 +57,3 @@ class CoreffConnector(models.Model):
         ?
         """
         return
-
-    def format_error(self, response):
-        """
-        Format api response
-        """
-        res = {}
-        res["title"] = "[{}] : {}".format(
-            response.status_code, response.reason
-        )
-        res["body"] = response.content
-        return {"error": res}

@@ -45,12 +45,3 @@ class CoreffConnector(models.Model):
         ?
         """
         return
-
-    def format_error(self, response):
-        """
-        Format api response
-        """
-        res = {}
-        res["title"] = "[{}] : {}".format(response.status_code, response.reason)
-        res["body"] = response.content
-        return {"error": res}
