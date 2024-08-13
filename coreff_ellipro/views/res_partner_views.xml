@@ -19,6 +19,11 @@
                     <group>
                         <button string="Get company's infos" name="ellipro_get_infos" type="object"
                             attrs="{'invisible': [('ellipro_visibility', '=', True)]}" />
+                        <button string="Make an order"
+                            name="ellipro_order"
+                            type="object"
+                            class="oe_highlight"
+                            confirm="Be careful, this action may override Ellipro fields" />
                         <field name="ellipro_identifiant_interne" force_save="1" readonly="1" />
                         <field name="ellipro_siren" force_save="1" readonly="1" />
                         <field name="ellipro_siret" force_save="1" readonly="1" />
@@ -32,11 +37,10 @@
                         <field name="ellipro_rating_score" widget="percentpie" />
                         <field name="ellipro_rating_riskclass" widget="percentpie" />
                         <field name="ellipro_order_product" />
-                        <button string="Make an order"
-                            name="ellipro_order"
-                            type="object"
-                            class="oe_highlight"
-                            confirm="Be careful, this action can override Ellipro fields" />
+                        <field name="ellipro_order_format" />
+                    </group>
+                    <group string="Data">
+                        <field name="ellipro_data" readonly="1" nolabel="1" />
                     </group>
                 </page>
             </xpath>
