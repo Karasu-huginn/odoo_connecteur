@@ -51,6 +51,7 @@ class Search:
     max_hits: str
     type_attribute: IdType
     main_only: str
+    country: str
     custom_content = "false"
     company_status = "active"
     establishment_status = "active"
@@ -69,7 +70,8 @@ class Search:
         elif self.search_type == SearchType.NAME:
             ET.SubElement(search_criteria, "name").text = self.search_text
         address = ET.SubElement(search_criteria, "address")
-        ET.SubElement(address, "country", attrib={"code": "FRA"})
+        # ? self.country = pycountry.countries.get(alpha_2=self.country).alpha_3
+        ET.SubElement(address, "country", attrib={"code": self.country})
 
         search_options = ET.SubElement(request, "searchOptions")
         ET.SubElement(search_options, "phoneticSearch").text = self.phonetic_search
@@ -123,6 +125,7 @@ def search(admin, request, request_type, lang="FR", version="2.2"):
     )
     admin.set_element(root)
     request.set_element(root)
+    logging.info(ET.tostring(root))
     body = ET.tostring(root)
 
     request_result = requests.post(

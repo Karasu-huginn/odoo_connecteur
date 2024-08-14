@@ -1,6 +1,5 @@
 from odoo import fields, models
 from .. import ellipro as EP
-import logging
 
 
 class ElliproDataMixin(models.AbstractModel):
@@ -47,6 +46,7 @@ class ElliproDataMixin(models.AbstractModel):
             search_type = EP.SearchType.ID
             request_type = EP.RequestType.SEARCH.value
             type_attribute = EP.IdType.ESTB
+            country = ""  #! TEMP
 
             admin = EP.Admin(
                 self.env.user.company_id.ellipro_contract,
@@ -60,6 +60,7 @@ class ElliproDataMixin(models.AbstractModel):
                 self.env.user.company_id.ellipro_max_hits,
                 type_attribute,
                 main_only,
+                country,
             )
             response = EP.search(admin, search_request, request_type)
             response = EP.search_response_handle(response)
