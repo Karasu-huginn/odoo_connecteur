@@ -3,7 +3,6 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from enum import Enum
 import base64
-import logging
 
 
 class IdType(Enum):
@@ -70,7 +69,6 @@ class Search:
         elif self.search_type == SearchType.NAME:
             ET.SubElement(search_criteria, "name").text = self.search_text
         address = ET.SubElement(search_criteria, "address")
-        # ? self.country = pycountry.countries.get(alpha_2=self.country).alpha_3
         ET.SubElement(address, "country", attrib={"code": self.country})
 
         search_options = ET.SubElement(request, "searchOptions")
@@ -125,7 +123,6 @@ def search(admin, request, request_type, lang="FR", version="2.2"):
     )
     admin.set_element(root)
     request.set_element(root)
-    logging.info(ET.tostring(root))
     body = ET.tostring(root)
 
     request_result = requests.post(

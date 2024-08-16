@@ -46,7 +46,14 @@ class ElliproDataMixin(models.AbstractModel):
             search_type = EP.SearchType.ID
             request_type = EP.RequestType.SEARCH.value
             type_attribute = EP.IdType.ESTB
-            country = ""  #! TEMP
+            if self.country["country_id"]:
+                country = (
+                    self.env["res.country"]
+                    .browse(int(self.country["country_id"]))
+                    .code_alpha3
+                )
+            else:
+                country = "FRA"
 
             admin = EP.Admin(
                 self.env.user.company_id.ellipro_contract,

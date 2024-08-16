@@ -23,8 +23,10 @@
                             name="pappers_retrieve_directors"
                             type="object" />
                         <field name="pappers_internal_id" force_save="1" readonly="1" />
-                        <field name="pappers_data" />
                         <button string="Get Report" name="pappers_get_report" type="object" />
+                        <group string="Data">
+                            <field name="pappers_data" readonly="1" nolabel="1" />
+                        </group>
                     </group>
                 </page>
             </xpath>

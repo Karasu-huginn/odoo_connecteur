@@ -2,7 +2,6 @@ from requests import Session
 from odoo.tools.config import config
 from odoo import api, models
 from .. import ellipro as EP
-import logging
 
 
 class CustomSessionProxy(Session):
