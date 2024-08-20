@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from enum import Enum
 import base64
+import logging
 
 
 class IdType(Enum):
@@ -136,22 +137,21 @@ def search(admin, request, request_type, lang="FR", version="2.2"):
         return order_return(request, request_result)
 
 
-def search_response_handle(response):
+def search_response_handle(response, country_code):
     """Parse a SvcSearch request response and return a list of dictionaries."""
     suggestions = []
     for establishment in response.iter("establishment"):
         suggestion = {}
         suggestion["ellipro_data"] = xml_to_tree(establishment, 0)
         suggestion["name"] = establishment.findall("name")[0].text
-        suggestion["coreff_company_code"] = establishment.findall(
-            "id[@idName='SIRET']"
-        )[0].text
-        suggestion["ellipro_siren"] = establishment.findall("id[@idName='SIREN']")[
-            0
-        ].text
-        suggestion["ellipro_siret"] = establishment.findall("id[@idName='SIRET']")[
-            0
-        ].text
+        if country_code == "FRA":
+            suggestion["coreff_company_code"] = establishment.findall(
+                "id[@idName='SIRET']"
+            )[0].text
+        else:
+            suggestion["coreff_company_code"] = establishment.findall(
+                "id[@idName='Numéro N.I.F.']"
+            )[0].text
         suggestion["ellipro_identifiant_interne"] = establishment.findall(
             "id[@idName='Identifiant interne']"
         )[0].text
@@ -162,25 +162,6 @@ def search_response_handle(response):
         suggestion["city"] = establishment.findall("address/cityName")[0].text
         suggestion["zip"] = establishment.findall("address/cityCode")[0].text
         suggestion["street"] = establishment.findall("address/addressLine")[0].text
-        if establishment.findall("name[@type='businessname']") != []:
-            suggestion["ellipro_business_name"] = establishment.findall(
-                "name[@type='businessname']"
-            )[0].text
-        if establishment.findall("name[@type='tradename']") != []:
-            suggestion["ellipro_trade_name"] = establishment.findall(
-                "name[@type='tradename']"
-            )[0].text
-        suggestion["ellipro_city"] = establishment.findall("address/cityName")[0].text
-        suggestion["ellipro_zipcode"] = establishment.findall("address/cityCode")[
-            0
-        ].text
-        suggestion["ellipro_street_address"] = establishment.findall(
-            "address/addressLine"
-        )[0].text
-        if establishment.findall("communication[@type='phone']") != []:
-            suggestion["ellipro_phone_number"] = establishment.findall(
-                "communication[@type='phone']"
-            )[0].text
         suggestions.append(suggestion)
     return suggestions
 
@@ -210,11 +191,16 @@ def parse_order(order):
         parsed_order["ellipro_rating_riskclass"] = (
             (4 - (ord(rating_riskclass) - 65)) / 4 * 100
         )  # * letter given goes from A for best to E for worst, converted to 0-4 scale then to %
+        # parsed_order["ellipro_order_data"] = xml_to_tree(response, 0)
+        parsed_order["ellipro_order_data"] = xml_to_tree(response, 0)
     return parsed_order
 
 
 def xml_to_tree(response, n, value=""):
     for element in response:
+        logging.info("----------------")
+        logging.info(element.tag)
+        logging.info(element.text)
         if len(list(element)) != 0:
             value += n * "\t" + element.tag + " :\n" + xml_to_tree(element, n + 1)
         else:
@@ -226,11 +212,11 @@ def xml_to_tree(response, n, value=""):
                     + element.attrib["type"]
                     + ")"
                     + " = "
-                    + element.text
+                    + str(element.text)
                     + "\n"
                 )
             else:
-                value += n * "\t" + element.tag + " = " + element.text + "\n"
+                value += n * "\t" + element.tag + " = " + str(element.text) + "\n"
     return value
 
 

@@ -2,6 +2,7 @@ from requests import Session
 from odoo.tools.config import config
 from odoo import api, models
 from .. import ellipro as EP
+import logging
 
 
 class CustomSessionProxy(Session):
@@ -54,8 +55,9 @@ class CoreffConnector(models.Model):
         )
         response = EP.search(admin, search_request, request_type)
         response = EP.search_response_handle(
-            response
+            response, country
         )  # * returns all research suggestions
+        logging.info(response)
         return response
 
     @api.model
